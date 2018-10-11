@@ -37,20 +37,6 @@ public class EurekaIntanceConfig {
 
     @Bean
     @Primary
-    @Profile("!fargate")
-    public EurekaInstanceConfigBean eurekaInstanceConfigBeanForDev(final InetUtils inetUtils) {
-
-        final var config = new EurekaInstanceConfigBean(inetUtils);
-        config.setIpAddress("127.0.0.1");
-        config.setSecurePort(getPortNumber());
-        config.setNonSecurePort(getPortNumber());
-
-        return config;
-
-    }
-
-    @Bean
-    @Primary
     @Profile("fargate")
     public EurekaInstanceConfigBean eurekaInstanceConfigBeanForEcs(final InetUtils inetUtils) {
 
