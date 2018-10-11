@@ -84,14 +84,4 @@ public class EurekaIntanceConfig {
         return Integer.parseInt(env.getProperty("server.port", "8888"));
     }
 
-    // private String getEcsPrivateIpFromMetadata() throws IOException {
-    //
-    //     var responseEntity = new RestTemplate().getForEntity(URL_V_2_METADATA, String.class);
-    //     var json = responseEntity.getBody();
-    //     var ecsMetadata = Converter.fromJsonString(json);
-    //
-    //     return ecsMetadata.getContainers()[0].getNetworks()[0].getIPv4Addresses()[0];
-    //
-    // }
-
 }
