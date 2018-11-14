@@ -1,6 +1,7 @@
 package com.bureauworks.springeurekaecs;
 
 import com.netflix.appinfo.AmazonInfo;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -43,10 +44,23 @@ public class EurekaIntanceConfig {
     @Bean
     @Profile("ecs")
     public EurekaInstanceConfigBean eurekaInstanceConfig(InetUtils inetUtils) {
-        EurekaInstanceConfigBean b = new EurekaInstanceConfigBean(inetUtils);
-        AmazonInfo info = AmazonInfo.Builder.newBuilder().autoBuild("eureka");
-        b.setDataCenterInfo(info);
-        return b;
+
+        final var config = new EurekaInstanceConfigBean(inetUtils);
+        final var info = AmazonInfo.Builder.newBuilder().autoBuild("eureka");
+
+        config.setDataCenterInfo(info);
+
+        final var localIpv4 = info.getMetadata().get("local-ipv4");
+        if (StringUtils.isNotEmpty(localIpv4)) {
+            config.setIpAddress(getEcsFargatePrivateIp());
+        }
+
+        config.setSecurePort(getPortNumber());
+        config.setNonSecurePort(getPortNumber());
+
+
+        return config;
+
     }
 
     @Bean
