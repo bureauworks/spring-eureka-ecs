@@ -50,13 +50,13 @@ public class EurekaIntanceConfig {
 
         config.setDataCenterInfo(info);
 
-        final var localIpv4 = info.getMetadata().get("local-ipv4");
-        if (StringUtils.isNotEmpty(localIpv4)) {
-            config.setIpAddress(getEcsFargatePrivateIp());
-        }
-
-        config.setSecurePort(getPortNumber());
-        config.setNonSecurePort(getPortNumber());
+//        final var localIpv4 = info.getMetadata().get("local-ipv4");
+//        if (StringUtils.isNotEmpty(localIpv4)) {
+//            config.setIpAddress(getEcsFargatePrivateIp());
+//        }
+//
+//        config.setSecurePort(getPortNumber());
+//        config.setNonSecurePort(getPortNumber());
 
 
         return config;
