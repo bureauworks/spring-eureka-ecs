@@ -1,5 +1,7 @@
 package com.bureauworks.springeurekaecs;
 
+import com.netflix.appinfo.AmazonInfo;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -35,13 +37,39 @@ public class EurekaIntanceConfig {
         this.env = env;
     }
 
+    /**
+     * See
+     * https://cloud.spring.io/spring-cloud-netflix/multi/multi__service_discovery_eureka_clients.html#_using_eureka_on_aws
+     */
+    @Bean
+    @Profile("ecs")
+    public EurekaInstanceConfigBean eurekaInstanceConfig(InetUtils inetUtils) {
+
+        final var config = new EurekaInstanceConfigBean(inetUtils);
+        final var info = AmazonInfo.Builder.newBuilder().autoBuild("eureka");
+
+        config.setDataCenterInfo(info);
+
+        final var localIpv4 = info.getMetadata().get("local-ipv4");
+        if (StringUtils.isNotEmpty(localIpv4)) {
+            config.setIpAddress(getEcsFargatePrivateIp());
+        }
+
+        config.setSecurePort(getPortNumber());
+        config.setNonSecurePort(getPortNumber());
+
+
+        return config;
+
+    }
+
     @Bean
     @Primary
     @Profile("fargate")
     public EurekaInstanceConfigBean eurekaInstanceConfigBeanForEcs(final InetUtils inetUtils) {
 
         final var config = new EurekaInstanceConfigBean(inetUtils);
-        config.setIpAddress(getEcsPrivateIp());
+        config.setIpAddress(getEcsFargatePrivateIp());
         config.setSecurePort(getPortNumber());
         config.setNonSecurePort(getPortNumber());
 
@@ -49,7 +77,7 @@ public class EurekaIntanceConfig {
 
     }
 
-    private String getEcsPrivateIp() {
+    private String getEcsFargatePrivateIp() {
 
         final var hostname = env.getProperty("HOSTNAME", "");
         final var pattern = Pattern.compile("ip-(\\d+-\\d+-\\d+-\\d+)\\.ec2\\.internal");
