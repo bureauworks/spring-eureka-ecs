@@ -42,6 +42,7 @@ public class EurekaIntanceConfig {
      * https://cloud.spring.io/spring-cloud-netflix/multi/multi__service_discovery_eureka_clients.html#_using_eureka_on_aws
      */
     @Bean
+    @Primary
     @Profile("ecs")
     public EurekaInstanceConfigBean eurekaInstanceConfig(InetUtils inetUtils) {
 
