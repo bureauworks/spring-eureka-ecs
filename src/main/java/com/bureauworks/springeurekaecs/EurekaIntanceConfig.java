@@ -48,17 +48,15 @@ public class EurekaIntanceConfig {
 
         final var config = new EurekaInstanceConfigBean(inetUtils);
         final var info = AmazonInfo.Builder.newBuilder().autoBuild("eureka");
-
         config.setDataCenterInfo(info);
 
-        final var localIpv4 = info.getMetadata().get("local-ipv4");
-        if (StringUtils.isNotEmpty(localIpv4)) {
-            config.setIpAddress(getEcsFargatePrivateIp());
-        }
+        info.getMetadata().put(AmazonInfo.MetaDataKey.publicHostname.getName(), info.get(AmazonInfo.MetaDataKey.publicIpv4));
+        info.getMetadata().put(AmazonInfo.MetaDataKey.localIpv4.getName(), info.get(AmazonInfo.MetaDataKey.localIpv4));
 
+        config.setHostname(info.get(AmazonInfo.MetaDataKey.localHostname));
+        config.setIpAddress(info.get(AmazonInfo.MetaDataKey.localIpv4));
         config.setSecurePort(getPortNumber());
         config.setNonSecurePort(getPortNumber());
-
 
         return config;
 
