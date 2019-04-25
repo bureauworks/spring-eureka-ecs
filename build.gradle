@@ -11,11 +11,11 @@ plugins {
 
 group = 'com.bureauworks'
 version = '0.0.1'
-sourceCompatibility = 10
+sourceCompatibility = 11
 
 ext {
-    springBootVersion = '2.0.5.RELEASE'
-    springCloudVersion = 'Finchley.SR1'
+    springBootVersion = '2.1.4.RELEASE'
+    springCloudVersion = 'Greenwich.SR1'
 }
 
 repositories {
@@ -41,7 +41,6 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-
             artifact sourcesJar
             artifact javadocJar
         }
